@@ -1,11 +1,26 @@
 {
   "mcpServers": {
-    "mssql": {
+    "mssql-read": {
       "command": "C:\\path\\to\\SqlMcpServer\\publish\\SqlMcpServer.Host.exe",
       "args": [],
       "env": {
         "SqlServer__ConnectionString": "Server=.;Database=MyDatabase;Trusted_Connection=true;Encrypt=false;",
         "SqlServer__AuthMode": "WindowsAuth",
+        "Security__ActiveRole": "ReadOnly",
+        "Security__AllowWriteOperations": "false",
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "Serilog__MinimumLevel__Default": "Warning"
+      }
+    },
+    "mssql-write": {
+      "command": "C:\\path\\to\\SqlMcpServer\\publish\\SqlMcpServer.Host.exe",
+      "args": [],
+      "env": {
+        "SqlServer__ConnectionString": "Server=.;Database=MyDatabase;Trusted_Connection=true;Encrypt=false;",
+        "SqlServer__AuthMode": "WindowsAuth",
+        "Security__ActiveRole": "DBA",
+        "Security__AllowWriteOperations": "true",
+        "Security__AllowDdl": "true",
         "ASPNETCORE_ENVIRONMENT": "Production",
         "Serilog__MinimumLevel__Default": "Warning"
       }

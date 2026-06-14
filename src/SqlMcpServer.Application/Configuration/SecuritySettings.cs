@@ -1,7 +1,10 @@
+using SqlMcpServer.Domain.Enums;
+
 namespace SqlMcpServer.Application.Configuration;
 
 public sealed class SecuritySettings
 {
+    public UserRole ActiveRole { get; set; } = UserRole.Developer;
     public bool EnableQuerySafetyValidation { get; set; } = true;
     public bool AllowWriteOperations { get; set; } = false;
     public int MaxResultRows { get; set; } = 10_000;

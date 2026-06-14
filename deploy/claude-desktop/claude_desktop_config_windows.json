@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "mssql": {
+    "mssql-read": {
       "command": "dotnet",
       "args": [
         "run",
@@ -11,6 +11,26 @@
       "env": {
         "SqlServer__ConnectionString": "Server=.;Database=MyDatabase;Trusted_Connection=true;Encrypt=false;",
         "SqlServer__AuthMode": "WindowsAuth",
+        "Security__ActiveRole": "ReadOnly",
+        "Security__AllowWriteOperations": "false",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Serilog__MinimumLevel__Default": "Warning"
+      }
+    },
+    "mssql-write": {
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "C:\\path\\to\\SqlMcpServer\\src\\SqlMcpServer.Host",
+        "--no-build"
+      ],
+      "env": {
+        "SqlServer__ConnectionString": "Server=.;Database=MyDatabase;Trusted_Connection=true;Encrypt=false;",
+        "SqlServer__AuthMode": "WindowsAuth",
+        "Security__ActiveRole": "DBA",
+        "Security__AllowWriteOperations": "true",
+        "Security__AllowDdl": "true",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "Serilog__MinimumLevel__Default": "Warning"
       }

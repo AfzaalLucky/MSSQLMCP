@@ -1,14 +1,28 @@
 {
   "mcpServers": {
-    "mssql": {
+    "mssql-read": {
       "command": "docker",
       "args": [
-        "run",
-        "--rm",
-        "-i",
-        "--network", "host",
-        "-e", "SqlServer__ConnectionString=Server=localhost,1433;Database=MyDatabase;User Id=sa;Password=YourPassword;Encrypt=false;TrustServerCertificate=true;",
+        "run", "--rm", "-i", "--network", "host",
+        "-e", "SqlServer__ConnectionString=Server=localhost,1433;Database=MyDatabase;User Id=sa;Password=YourPassword;TrustServerCertificate=true;",
         "-e", "SqlServer__AuthMode=SqlAuth",
+        "-e", "Security__ActiveRole=ReadOnly",
+        "-e", "Security__AllowWriteOperations=false",
+        "-e", "Cache__Provider=Memory",
+        "-e", "ASPNETCORE_ENVIRONMENT=Production",
+        "-e", "Serilog__MinimumLevel__Default=Warning",
+        "sqlmcpserver:latest"
+      ]
+    },
+    "mssql-write": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i", "--network", "host",
+        "-e", "SqlServer__ConnectionString=Server=localhost,1433;Database=MyDatabase;User Id=sa;Password=YourPassword;TrustServerCertificate=true;",
+        "-e", "SqlServer__AuthMode=SqlAuth",
+        "-e", "Security__ActiveRole=DBA",
+        "-e", "Security__AllowWriteOperations=true",
+        "-e", "Security__AllowDdl=true",
         "-e", "Cache__Provider=Memory",
         "-e", "ASPNETCORE_ENVIRONMENT=Production",
         "-e", "Serilog__MinimumLevel__Default=Warning",

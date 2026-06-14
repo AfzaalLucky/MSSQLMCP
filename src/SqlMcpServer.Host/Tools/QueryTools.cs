@@ -1,7 +1,9 @@
 using System.ComponentModel;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using ModelContextProtocol.Server;
+using SqlMcpServer.Application.Configuration;
 using SqlMcpServer.Application.Models.Requests;
 using SqlMcpServer.Application.Services;
 using SqlMcpServer.CrossCutting.Throttling;
@@ -11,9 +13,13 @@ using SqlMcpServer.Host.Helpers;
 namespace SqlMcpServer.Host.Tools;
 
 [McpServerToolType]
-public sealed class QueryTools(IServiceScopeFactory sf, IRequestThrottler throttler)
+public sealed class QueryTools(
+    IServiceScopeFactory sf,
+    IRequestThrottler throttler,
+    IOptions<SecuritySettings> security)
     : McpToolBase(sf, throttler)
 {
+    private readonly UserRole _activeRole = security.Value.ActiveRole;
     [McpServerTool(Name = "execute_query")]
     [Description("Execute a SQL SELECT query and return results as JSON. Validated against safety rules before execution.")]
     public Task<string> ExecuteQuery(
@@ -27,7 +33,7 @@ public sealed class QueryTools(IServiceScopeFactory sf, IRequestThrottler thrott
             var svc = sp.GetRequiredService<QueryService>();
             var paramDict = DeserializeParameters(parameters);
             var request = new ExecuteQueryRequest(sql, paramDict, timeoutSeconds, maxRows);
-            var result = await svc.ExecuteQueryAsync(request, UserRole.Developer, ct: token);
+            var result = await svc.ExecuteQueryAsync(request, _activeRole, ct: token);
             return ToolHelper.Serialize(result);
         }, ct);
 
@@ -42,7 +48,7 @@ public sealed class QueryTools(IServiceScopeFactory sf, IRequestThrottler thrott
             var svc = sp.GetRequiredService<QueryService>();
             var paramDict = DeserializeParameters(parameters) ?? [];
             var request = new ExecuteQueryRequest(sql, paramDict);
-            var result = await svc.ExecuteParameterizedQueryAsync(request, UserRole.Developer, ct: token);
+            var result = await svc.ExecuteParameterizedQueryAsync(request, _activeRole, ct: token);
             return ToolHelper.Serialize(result);
         }, ct);
 
@@ -58,7 +64,7 @@ public sealed class QueryTools(IServiceScopeFactory sf, IRequestThrottler thrott
             var svc = sp.GetRequiredService<QueryService>();
             var paramDict = DeserializeParameters(parameters);
             var request = new ExecuteProcedureRequest(schema, name, paramDict);
-            var result = await svc.ExecuteProcedureAsync(request, UserRole.Developer, ct: token);
+            var result = await svc.ExecuteProcedureAsync(request, _activeRole, ct: token);
             return ToolHelper.Serialize(result);
         }, ct);
 
