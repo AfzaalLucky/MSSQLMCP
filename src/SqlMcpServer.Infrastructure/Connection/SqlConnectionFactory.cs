@@ -66,9 +66,12 @@ internal sealed class SqlConnectionFactory : IConnectionFactory
             MaxPoolSize = _settings.MaxPoolSize,
             MinPoolSize = _settings.MinPoolSize,
             ConnectTimeout = _settings.ConnectTimeoutSeconds,
-            Encrypt = _settings.Encrypt,
-            TrustServerCertificate = _settings.TrustServerCertificate
         };
+
+        if (_settings.Encrypt.HasValue)
+            builder.Encrypt = _settings.Encrypt.Value;
+        if (_settings.TrustServerCertificate.HasValue)
+            builder.TrustServerCertificate = _settings.TrustServerCertificate.Value;
 
         switch (_settings.AuthMode)
         {
