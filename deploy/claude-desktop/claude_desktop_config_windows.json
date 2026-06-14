@@ -5,7 +5,7 @@
       "args": [
         "run",
         "--project",
-        "C:\\path\\to\\SqlMcpServer\\src\\SqlMcpServer.Host",
+        "D:\\ProjecTs\\lucKY\\AiProjeTs\\Claude\\MSSQLMCP\\src\\SqlMcpServer.Host",
         "--no-build"
       ],
       "env": {
@@ -22,7 +22,7 @@
       "args": [
         "run",
         "--project",
-        "C:\\path\\to\\SqlMcpServer\\src\\SqlMcpServer.Host",
+        "D:\\ProjecTs\\lucKY\\AiProjeTs\\Claude\\MSSQLMCP\\src\\SqlMcpServer.Host",
         "--no-build"
       ],
       "env": {
