@@ -1,0 +1,55 @@
+{
+  "mcpServers": {
+    "sqlserver": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@executeautomation/database-server",
+        "--sqlserver",
+        "--server",
+        "localhost",
+        "--database",
+        "AIStack",
+        "--user",
+        "sa",
+        "--password",
+        "root123!!--"
+      ]
+    },
+    "mssql": {
+      "command": "D:\\ProjecTs\\lucKY\\AiProjeTs\\Claude\\MSSQLMCP\\src\\SqlMcpServer.Host\\bin\\Debug\\net8.0\\SqlMcpServer.Host.exe",
+      "args": [],
+      "env": {
+        "SqlServer__ConnectionString": "Server=.;Database=AIStack;Trusted_Connection=true;Encrypt=false;",
+        "SqlServer__AuthMode": "WindowsAuth",
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "Serilog__MinimumLevel__Default": "Warning"
+      }
+    }
+  },
+  "coworkUserFilesPath": "C:\\Users\\afzaa\\Claude",
+  "preferences": {
+    "coworkScheduledTasksEnabled": false,
+    "ccdScheduledTasksEnabled": true,
+    "sidebarMode": "epitaxy",
+    "bypassPermissionsGateByAccount": {
+      "183a2dcd-aa84-4fe1-b798-44dc7a813ab0": false
+    },
+    "coworkWebSearchEnabled": true,
+    "coworkModelAutoFallbackByAccount": {
+      "183a2dcd-aa84-4fe1-b798-44dc7a813ab0": true
+    },
+    "remoteToolsDeviceName": "lucky",
+    "epitaxyPrefs": {
+      "starred-local-code-sessions": [],
+      "starred-cowork-spaces": [],
+      "starred-session-groups": [],
+      "dframe-local-slice": {
+        "pinnedOrder": [],
+        "customGroupAssignments": {},
+        "customGroupOrder": {}
+      }
+    },
+    "coworkHipaaRestricted": false
+  }
+}

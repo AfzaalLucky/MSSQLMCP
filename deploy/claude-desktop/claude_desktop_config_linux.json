@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "/home/user/SqlMcpServer/src/SqlMcpServer.Host",
+        "--no-build"
+      ],
+      "env": {
+        "SqlServer__ConnectionString": "Server=localhost;Database=MyDatabase;User Id=sa;Password=YourPassword;Encrypt=false;TrustServerCertificate=true;",
+        "SqlServer__AuthMode": "SqlAuth",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "Serilog__MinimumLevel__Default": "Warning"
+      }
+    }
+  }
+}

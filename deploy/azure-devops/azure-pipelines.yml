@@ -1,0 +1,209 @@
+trigger:
+  branches:
+    include:
+      - master
+      - main
+      - develop
+  tags:
+    include:
+      - "v*"
+
+pr:
+  branches:
+    include:
+      - master
+      - main
+
+variables:
+  DOTNET_VERSION: "8.0.x"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_NOLOGO: true
+  IMAGE_NAME: sqlmcpserver
+  REGISTRY: $(acrLoginServer)
+
+stages:
+  - stage: BuildAndTest
+    displayName: Build & Test
+    jobs:
+      - job: Build
+        displayName: Restore, Build, Test
+        pool:
+          vmImage: ubuntu-latest
+
+        steps:
+          - task: UseDotNet@2
+            displayName: Use .NET $(DOTNET_VERSION)
+            inputs:
+              version: $(DOTNET_VERSION)
+
+          - task: DotNetCoreCLI@2
+            displayName: Restore
+            inputs:
+              command: restore
+              projects: "SqlMcpServer.sln"
+
+          - task: DotNetCoreCLI@2
+            displayName: Build
+            inputs:
+              command: build
+              projects: "SqlMcpServer.sln"
+              arguments: "--no-restore -c Release"
+
+          - task: DotNetCoreCLI@2
+            displayName: Test
+            inputs:
+              command: test
+              projects: "SqlMcpServer.sln"
+              arguments: >-
+                --no-build -c Release
+                --logger trx
+                --results-directory $(Agent.TempDirectory)/TestResults
+                --collect:"XPlat Code Coverage"
+
+          - task: PublishTestResults@2
+            displayName: Publish Test Results
+            condition: always()
+            inputs:
+              testResultsFormat: VSTest
+              testResultsFiles: "$(Agent.TempDirectory)/TestResults/**/*.trx"
+
+          - task: PublishCodeCoverageResults@2
+            displayName: Publish Coverage
+            inputs:
+              codeCoverageTool: Cobertura
+              summaryFileLocation: "$(Agent.TempDirectory)/TestResults/**/coverage.cobertura.xml"
+
+  - stage: SecurityScan
+    displayName: Security Scan
+    dependsOn: BuildAndTest
+    condition: succeeded()
+    jobs:
+      - job: NuGetAudit
+        displayName: NuGet Vulnerability Audit
+        pool:
+          vmImage: ubuntu-latest
+
+        steps:
+          - task: UseDotNet@2
+            inputs:
+              version: $(DOTNET_VERSION)
+
+          - script: |
+              dotnet restore SqlMcpServer.sln
+              dotnet list SqlMcpServer.sln package --vulnerable --include-transitive | tee $(Build.ArtifactStagingDirectory)/nuget-audit.txt
+              grep -q "has the following vulnerable packages" $(Build.ArtifactStagingDirectory)/nuget-audit.txt && exit 1 || exit 0
+            displayName: Audit NuGet Packages
+
+          - task: PublishBuildArtifacts@1
+            condition: always()
+            inputs:
+              pathToPublish: $(Build.ArtifactStagingDirectory)/nuget-audit.txt
+              artifactName: SecurityReports
+
+  - stage: DockerBuild
+    displayName: Docker Build & Push
+    dependsOn: SecurityScan
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - job: DockerBuildPush
+        displayName: Build & Push to ACR
+        pool:
+          vmImage: ubuntu-latest
+
+        steps:
+          - task: Docker@2
+            displayName: Login to ACR
+            inputs:
+              command: login
+              containerRegistry: $(acrServiceConnection)
+
+          - task: Docker@2
+            displayName: Build & Push
+            inputs:
+              command: buildAndPush
+              repository: $(IMAGE_NAME)
+              dockerfile: Dockerfile
+              containerRegistry: $(acrServiceConnection)
+              tags: |
+                $(Build.BuildId)
+                latest
+
+          - script: |
+              docker run --rm \
+                -v /var/run/docker.sock:/var/run/docker.sock \
+                aquasec/trivy:latest image \
+                --exit-code 1 \
+                --severity CRITICAL,HIGH \
+                --ignore-unfixed \
+                $(REGISTRY)/$(IMAGE_NAME):$(Build.BuildId)
+            displayName: Trivy Container Scan
+
+  - stage: DeployStaging
+    displayName: Deploy to Staging
+    dependsOn: DockerBuild
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+
+    jobs:
+      - deployment: Staging
+        displayName: Deploy — Staging
+        environment: staging
+        pool:
+          vmImage: ubuntu-latest
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  displayName: Set AKS context
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      az aks get-credentials \
+                        --resource-group $(aksResourceGroupStaging) \
+                        --name $(aksClusterNameStaging) \
+                        --overwrite-existing
+
+                - script: |
+                    kubectl set image deployment/sqlmcpserver \
+                      sqlmcpserver=$(REGISTRY)/$(IMAGE_NAME):$(Build.BuildId) \
+                      -n sqlmcpserver
+                    kubectl rollout status deployment/sqlmcpserver \
+                      -n sqlmcpserver --timeout=120s
+                  displayName: Rollout Staging
+
+  - stage: DeployProduction
+    displayName: Deploy to Production
+    dependsOn: DeployStaging
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+
+    jobs:
+      - deployment: Production
+        displayName: Deploy — Production
+        environment: production
+        pool:
+          vmImage: ubuntu-latest
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  displayName: Set AKS context
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      az aks get-credentials \
+                        --resource-group $(aksResourceGroupProd) \
+                        --name $(aksClusterNameProd) \
+                        --overwrite-existing
+
+                - script: |
+                    kubectl set image deployment/sqlmcpserver \
+                      sqlmcpserver=$(REGISTRY)/$(IMAGE_NAME):$(Build.BuildId) \
+                      -n sqlmcpserver
+                    kubectl rollout status deployment/sqlmcpserver \
+                      -n sqlmcpserver --timeout=180s
+                  displayName: Rollout Production

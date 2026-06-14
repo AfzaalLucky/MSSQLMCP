@@ -1,0 +1,20 @@
+version: "3.9"
+
+# Dev overrides — applied automatically by `docker compose up` in development
+services:
+  mcp-server:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      SqlServer__TrustServerCertificate: "true"
+      SqlServer__CommandTimeoutSeconds: "60"
+      SqlServer__MaxPoolSize: "20"
+      Cache__Provider: "Memory"
+      Telemetry__SamplingRatio: "1.0"
+      Serilog__MinimumLevel__Default: "Debug"
+      Serilog__LogPath: ""
+    build:
+      target: build
+
+  seq:
+    environment:
+      SEQ_FIRSTRUN_ADMINPASSWORDHASH: ""

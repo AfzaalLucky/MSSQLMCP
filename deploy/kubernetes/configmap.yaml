@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sqlmcpserver-config
+  namespace: sqlmcpserver
+  labels:
+    app.kubernetes.io/name: sqlmcpserver
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  Mcp__ServerName: "SQL MCP Server"
+  Mcp__Version: "1.0.0"
+  Mcp__MaxConcurrentTools: "10"
+  SqlServer__AuthMode: "AzureManagedIdentity"
+  SqlServer__CommandTimeoutSeconds: "30"
+  SqlServer__ConnectTimeoutSeconds: "15"
+  SqlServer__MaxPoolSize: "100"
+  SqlServer__MinPoolSize: "5"
+  SqlServer__Encrypt: "true"
+  SqlServer__TrustServerCertificate: "false"
+  SqlServer__MaxRowsPerQuery: "10000"
+  Security__EnableQuerySafetyValidation: "true"
+  Security__AllowWriteOperations: "false"
+  Security__AllowDdl: "false"
+  Security__AllowDml: "false"
+  Security__MaxResultRows: "10000"
+  Security__MaxQueryTimeoutSeconds: "300"
+  Telemetry__ServiceName: "SqlMcpServer"
+  Telemetry__OtlpEndpoint: "http://otel-collector.observability.svc.cluster.local:4317"
+  Telemetry__EnableMetrics: "true"
+  Telemetry__EnableTracing: "true"
+  Telemetry__SamplingRatio: "0.1"
+  Cache__Provider: "Redis"
+  Cache__DefaultTtlSeconds: "300"
+  Cache__SchemasTtlSeconds: "600"
+  Cache__DefinitionsTtlSeconds: "900"
+  Cache__StatisticsTtlSeconds: "120"
+  Cache__DatabaseListTtlSeconds: "1800"
+  Tools__DefaultPageSize: "25"
+  Tools__MaxPageSize: "500"
+  Tools__SampleDataRowCount: "100"
+  Serilog__MinimumLevel__Default: "Information"
+  Serilog__LogPath: "/var/log/sqlmcpserver/app-.log"

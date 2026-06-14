@@ -34,7 +34,8 @@ public static class LoggingExtensions
             var prodTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] [{CorrelationId}] {SourceContext}: {Message:lj} {Properties:j}{NewLine}{Exception}";
 
             loggerConfig.WriteTo.Console(
-                outputTemplate: env.IsEnvironment("Development") ? devTemplate : prodTemplate);
+                outputTemplate: env.IsEnvironment("Development") ? devTemplate : prodTemplate,
+                standardErrorFromLevel: Serilog.Events.LogEventLevel.Verbose);
 
             var logPath = config["Serilog:LogPath"];
             if (!string.IsNullOrWhiteSpace(logPath))

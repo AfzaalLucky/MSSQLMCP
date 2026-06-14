@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "C:\\path\\to\\SqlMcpServer\\publish\\SqlMcpServer.Host.exe",
+      "args": [],
+      "env": {
+        "SqlServer__ConnectionString": "Server=.;Database=MyDatabase;Trusted_Connection=true;Encrypt=false;",
+        "SqlServer__AuthMode": "WindowsAuth",
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "Serilog__MinimumLevel__Default": "Warning"
+      }
+    }
+  }
+}

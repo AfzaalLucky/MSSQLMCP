@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "mssql": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "--network", "host",
+        "-e", "SqlServer__ConnectionString=Server=localhost,1433;Database=MyDatabase;User Id=sa;Password=YourPassword;Encrypt=false;TrustServerCertificate=true;",
+        "-e", "SqlServer__AuthMode=SqlAuth",
+        "-e", "Cache__Provider=Memory",
+        "-e", "ASPNETCORE_ENVIRONMENT=Production",
+        "-e", "Serilog__MinimumLevel__Default=Warning",
+        "sqlmcpserver:latest"
+      ]
+    }
+  }
+}

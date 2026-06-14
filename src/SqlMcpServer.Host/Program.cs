@@ -9,6 +9,7 @@ await Host.CreateDefaultBuilder(args)
     .AddStructuredLogging()
     .ConfigureServices((ctx, services) =>
     {
+        Console.Error.WriteLine("Server started");
         var config = ctx.Configuration;
 
         services
