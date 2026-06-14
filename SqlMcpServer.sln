@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1B37483F-0CB9-43DC-8073-22557A02C842}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlMcpServer.Domain", "src\SqlMcpServer.Domain\SqlMcpServer.Domain.csproj", "{DE28B251-9137-4279-8166-43D3F2F7CB0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlMcpServer.Application", "src\SqlMcpServer.Application\SqlMcpServer.Application.csproj", "{4B15B415-0033-4DFD-A73C-934AFE7E3D28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlMcpServer.Infrastructure", "src\SqlMcpServer.Infrastructure\SqlMcpServer.Infrastructure.csproj", "{8D553D1C-2226-427F-9E43-B5BEF153F126}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlMcpServer.CrossCutting", "src\SqlMcpServer.CrossCutting\SqlMcpServer.CrossCutting.csproj", "{B86E6016-A569-4AB5-829F-E8A3C1BD0F6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlMcpServer.Host", "src\SqlMcpServer.Host\SqlMcpServer.Host.csproj", "{E800FA6F-E78D-407C-B3CA-C4BCFDFF121D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE28B251-9137-4279-8166-43D3F2F7CB0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE28B251-9137-4279-8166-43D3F2F7CB0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE28B251-9137-4279-8166-43D3F2F7CB0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE28B251-9137-4279-8166-43D3F2F7CB0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B15B415-0033-4DFD-A73C-934AFE7E3D28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B15B415-0033-4DFD-A73C-934AFE7E3D28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B15B415-0033-4DFD-A73C-934AFE7E3D28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B15B415-0033-4DFD-A73C-934AFE7E3D28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D553D1C-2226-427F-9E43-B5BEF153F126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D553D1C-2226-427F-9E43-B5BEF153F126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D553D1C-2226-427F-9E43-B5BEF153F126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D553D1C-2226-427F-9E43-B5BEF153F126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B86E6016-A569-4AB5-829F-E8A3C1BD0F6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B86E6016-A569-4AB5-829F-E8A3C1BD0F6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B86E6016-A569-4AB5-829F-E8A3C1BD0F6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B86E6016-A569-4AB5-829F-E8A3C1BD0F6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E800FA6F-E78D-407C-B3CA-C4BCFDFF121D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E800FA6F-E78D-407C-B3CA-C4BCFDFF121D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E800FA6F-E78D-407C-B3CA-C4BCFDFF121D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E800FA6F-E78D-407C-B3CA-C4BCFDFF121D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DE28B251-9137-4279-8166-43D3F2F7CB0A} = {1B37483F-0CB9-43DC-8073-22557A02C842}
+		{4B15B415-0033-4DFD-A73C-934AFE7E3D28} = {1B37483F-0CB9-43DC-8073-22557A02C842}
+		{8D553D1C-2226-427F-9E43-B5BEF153F126} = {1B37483F-0CB9-43DC-8073-22557A02C842}
+		{B86E6016-A569-4AB5-829F-E8A3C1BD0F6E} = {1B37483F-0CB9-43DC-8073-22557A02C842}
+		{E800FA6F-E78D-407C-B3CA-C4BCFDFF121D} = {1B37483F-0CB9-43DC-8073-22557A02C842}
+	EndGlobalSection
+EndGlobal
